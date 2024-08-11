@@ -1,0 +1,47 @@
+services:
+  postgres:
+    image: postgres
+    restart: always
+    container_name: postgres
+    volumes:
+      - ./data/pg-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432 # make sure you don't have another container running on 5432
+
+    environment:
+      - POSTGRES_USER=aashish
+      - POSTGRES_PASSWORD=HZOq2ELBcVhMsVfXbR60BSdgBqOHcvCU
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - ./data/redis-data:/data
+
+  mongo:
+    image: mongo
+    restart: always
+    container_name: mongo
+    ports:
+      - 27017:27017 # make sure we don't have another mongo container running on same port
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: aashish
+      MONGO_INITDB_ROOT_PASSWORD: HZOq2ELBcVhMsVfXbR60BSdgBqOHcvCU
+    volumes:
+      - ./data/mongo_data/:/data/db/
+
+  mysql:
+    image: mysql
+    restart: always
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: aashish
+      MYSQL_PASSWORD: HZOq2ELBcVhMsVfXbR60BSdgBqOHcvCU
+    ports:
+      - 3306:3306 # make sure you don't have another container running on 3306
+    volumes:
+      - ./data/mysql_data:/var/lib/mysql
