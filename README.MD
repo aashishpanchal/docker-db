@@ -1,7 +1,3 @@
-Here's a revised version of your `README.md` with navigation links added to make it easier to jump to specific sections:
-
----
-
 # Database Services Setup
 
 This repository contains configuration files for running multiple database services using Docker Compose. The services included are PostgreSQL, Redis, MongoDB, and MySQL. These services are intended to be used as shared databases for various projects, allowing for easy management and consistency.
@@ -20,12 +16,9 @@ This repository contains configuration files for running multiple database servi
 - [Stopping a Service](#stopping-a-service)
 - [Running in Detached Mode](#running-in-detached-mode)
 
-## Data Persistence
+## Others
 
 - [Data Persistence](#data-persistence)
-
-## Environment Variables
-
 - [Environment Variables](#environment-variables)
 
 ---
