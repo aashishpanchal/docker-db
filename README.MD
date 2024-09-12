@@ -29,7 +29,7 @@ This repository contains configuration files for running multiple database servi
 - **Ports:** `5432:5432`
 - **Volumes:** `./pg-data:/var/lib/postgresql/data`
 - **Environment Variables:**
-  - `POSTGRES_USER`: aashish
+  - `POSTGRES_USER`: root
   - `POSTGRES_PASSWORD`: HZOq2ELBcVhMsVfXbR60BSdgBqOHcvCU
 
 ### Redis
@@ -44,7 +44,7 @@ This repository contains configuration files for running multiple database servi
 - **Ports:** `27017:27017`
 - **Volumes:** `./mongo_data/:/data/db/`
 - **Environment Variables:**
-  - `MONGO_INITDB_ROOT_USERNAME`: aashish
+  - `MONGO_INITDB_ROOT_USERNAME`: root
   - `MONGO_INITDB_ROOT_PASSWORD`: HZOq2ELBcVhMsVfXbR60BSdgBqOHcvCU
 
 ### MySQL
@@ -54,7 +54,7 @@ This repository contains configuration files for running multiple database servi
 - **Volumes:** `./mysql_data:/var/lib/mysql`
 - **Environment Variables:**
   - `MYSQL_ROOT_PASSWORD`: root
-  - `MYSQL_USER`: aashish
+  - `MYSQL_USER`: root
   - `MYSQL_PASSWORD`: HZOq2ELBcVhMsVfXbR60BSdgBqOHcvCU
 
 ## Running a Specific Service

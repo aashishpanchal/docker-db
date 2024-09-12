@@ -9,7 +9,7 @@ services:
       - 5432:5432 # make sure you don't have another container running on 5432
 
     environment:
-      - POSTGRES_USER=aashish
+      - POSTGRES_USER=root
       - POSTGRES_PASSWORD=HZOq2ELBcVhMsVfXbR60BSdgBqOHcvCU
 
   redis:
@@ -28,7 +28,7 @@ services:
     ports:
       - 27017:27017 # make sure we don't have another mongo container running on same port
     environment:
-      MONGO_INITDB_ROOT_USERNAME: aashish
+      MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: HZOq2ELBcVhMsVfXbR60BSdgBqOHcvCU
     volumes:
       - ./data/mongo_data/:/data/db/
@@ -39,7 +39,7 @@ services:
     container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: aashish
+      MYSQL_USER: root
       MYSQL_PASSWORD: HZOq2ELBcVhMsVfXbR60BSdgBqOHcvCU
     ports:
       - 3306:3306 # make sure you don't have another container running on 3306
