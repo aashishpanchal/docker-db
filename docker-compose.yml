@@ -38,9 +38,7 @@ services:
     restart: always
     container_name: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: root
-      MYSQL_PASSWORD: HZOq2ELBcVhMsVfXbR60BSdgBqOHcvCU
+      MYSQL_ROOT_PASSWORD: HZOq2ELBcVhMsVfXbR60BSdgBqOHcvCU
     ports:
       - 3306:3306 # make sure you don't have another container running on 3306
     volumes:
