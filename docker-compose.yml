@@ -1,5 +1,5 @@
 services:
-# Postgres Sql database
+  # Postgres Sql database
   postgres:
     image: postgres
     restart: always
@@ -11,22 +11,22 @@ services:
 
     environment:
       - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=example123
-# Mysql database
+      - POSTGRES_PASSWORD=q8X7JiGEakDfYScg
+  # Mysql database
   mysql:
     image: mysql
     restart: always
     container_name: mysql
     environment:
-      # MYSQL_DATABASE: example_db
-      # MYSQL_USER: test
-      # MYSQL_PASSWORD: test@123
-      MYSQL_ROOT_PASSWORD: example123
+      # - MYSQL_DATABASE=example_db
+      # - MYSQL_USER=test
+      # - MYSQL_PASSWORD=test@123
+      - MYSQL_ROOT_PASSWORD=q8X7JiGEakDfYScg
     ports:
       - 3306:3306 # make sure you don't have another container running on 3306
     volumes:
       - ./data/mysql_data:/var/lib/mysql
-# Redis database
+  # Redis database
   redis:
     image: redis:latest
     container_name: redis
@@ -35,7 +35,7 @@ services:
       - 6379:6379
     volumes:
       - ./data/redis-data:/data
-# Mongodb database
+  # Mongodb database
   mongo:
     image: mongo
     restart: always
@@ -43,8 +43,7 @@ services:
     ports:
       - 27017:27017 # make sure we don't have another mongo container running on same port
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example123
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=q8X7JiGEakDfYScg
     volumes:
       - ./data/mongo_data/:/data/db/
-

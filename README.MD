@@ -30,7 +30,7 @@ This repository contains configuration files for running multiple database servi
 - **Volumes:** `./pg-data:/var/lib/postgresql/data`
 - **Environment Variables:**
   - `POSTGRES_USER`: root
-  - `POSTGRES_PASSWORD`: example123
+  - `POSTGRES_PASSWORD`: q8X7JiGEakDfYScg
 
 ### Redis
 
@@ -45,7 +45,7 @@ This repository contains configuration files for running multiple database servi
 - **Volumes:** `./mongo_data/:/data/db/`
 - **Environment Variables:**
   - `MONGO_INITDB_ROOT_USERNAME`: root
-  - `MONGO_INITDB_ROOT_PASSWORD`: example123
+  - `MONGO_INITDB_ROOT_PASSWORD`: q8X7JiGEakDfYScg
 
 ### MySQL
 
@@ -55,7 +55,7 @@ This repository contains configuration files for running multiple database servi
 - **Environment Variables:**
   - `MYSQL_ROOT_PASSWORD`: root
   - `MYSQL_USER`: root
-  - `MYSQL_PASSWORD`: example123
+  - `MYSQL_PASSWORD`: q8X7JiGEakDfYScg
 
 ## Running a Specific Service
 
