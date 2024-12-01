@@ -1,3 +1,4 @@
+version: '3.1'
 services:
   # Postgres Sql database
   postgres:
@@ -42,8 +43,8 @@ services:
     container_name: mongo
     ports:
       - 27017:27017 # make sure we don't have another mongo container running on same port
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=q8X7JiGEakDfYScg
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: joker
+    #   MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
       - ./data/mongo_data/:/data/db/

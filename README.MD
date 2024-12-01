@@ -43,9 +43,9 @@ This repository contains configuration files for running multiple database servi
 - **Image:** `mongo`
 - **Ports:** `27017:27017`
 - **Volumes:** `./mongo_data/:/data/db/`
-- **Environment Variables:**
+<!-- - **Environment Variables:**
   - `MONGO_INITDB_ROOT_USERNAME`: root
-  - `MONGO_INITDB_ROOT_PASSWORD`: q8X7JiGEakDfYScg
+  - `MONGO_INITDB_ROOT_PASSWORD`: q8X7JiGEakDfYScg -->
 
 ### MySQL
 
@@ -62,7 +62,7 @@ This repository contains configuration files for running multiple database servi
 To start a specific service, use the following command:
 
 ```bash
-docker-compose up <service-name>
+docker compose up <service-name>
 ```
 
 Replace `<service-name>` with the name of the service you want to start (e.g., `postgres`, `redis`, `mongo`, `mysql`).
@@ -72,7 +72,7 @@ Replace `<service-name>` with the name of the service you want to start (e.g., `
 To run only the PostgreSQL service:
 
 ```bash
-docker-compose up postgres
+docker compose up postgres
 ```
 
 ## Running Multiple Services
@@ -80,7 +80,7 @@ docker-compose up postgres
 To run multiple services, list them separated by a space:
 
 ```bash
-docker-compose up postgres mongo
+docker compose up postgres mongo
 ```
 
 ## Stopping a Service
@@ -88,7 +88,7 @@ docker-compose up postgres mongo
 To stop a specific service, use the following command:
 
 ```bash
-docker-compose stop <service-name>
+docker compose stop <service-name>
 ```
 
 #### Example
@@ -96,7 +96,7 @@ docker-compose stop <service-name>
 To stop the PostgreSQL service:
 
 ```bash
-docker-compose stop postgres
+docker compose stop postgres
 ```
 
 ## Running in Detached Mode
@@ -104,7 +104,7 @@ docker-compose stop postgres
 To start a service in detached mode (running in the background), use the `-d` flag:
 
 ```bash
-docker-compose up -d <service-name>
+docker compose up -d <service-name>
 ```
 
 #### Example
@@ -112,7 +112,7 @@ docker-compose up -d <service-name>
 To start PostgreSQL in detached mode:
 
 ```bash
-docker-compose up -d postgres
+docker compose up -d postgres
 ```
 
 ## Data Persistence
@@ -126,4 +126,4 @@ Each service has a designated volume for data persistence. These volumes are mou
 
 ## Environment Variables
 
-For security purposes, sensitive information like passwords is managed through environment variables. You can modify these values in the `docker-compose.yml` file as needed.
+For security purposes, sensitive information like passwords is managed through environment variables. You can modify these values in the `docker compose.yml` file as needed.
