@@ -48,3 +48,30 @@ services:
     #   MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
       - ./data/mongo_data/:/data/db/
+  # MariaDB database
+  mariadb:
+    image: mariadb
+    restart: always
+    container_name: mariadb
+    environment:
+      - MARIADB_ROOT_PASSWORD=q8X7JiGEakDfYScg
+      # - MARIADB_DATABASE=example_db # Optional: pre-create a database
+      # - MARIADB_USER=testuser # Optional: create a user
+      # - MARIADB_PASSWORD=testpassword # Optional: set the password for the user
+    ports:
+      - 3306:3306 # Expose MariaDB on port 3306
+    volumes:
+      - ./data/mariadb_data:/var/lib/mysql
+  # PhpMyAdmin service
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    container_name: phpmyadmin
+    ports:
+      - 8080:80 # Access phpMyAdmin via http://localhost:8080
+    environment:
+      - PMA_HOST=mariadb
+      - PMA_USER=root
+      - PMA_PASSWORD=q8X7JiGEakDfYScg
+    depends_on:
+      - mariadb
