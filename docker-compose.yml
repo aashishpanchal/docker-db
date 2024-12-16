@@ -16,9 +16,6 @@ services:
     restart: always
     container_name: mysql
     environment:
-      # - MYSQL_USER=joker
-      # - MYSQL_PASSWORD=joker_pass
-      # - MYSQL_DATABASE=test
       - MYSQL_ROOT_PASSWORD=pass # if you login with root, username is 'root'
     ports:
       - 3306:3306 # make sure you don't have another container running on 3306
@@ -35,11 +32,16 @@ services:
   mongo:
     image: mongo
     restart: always
-    container_name: mongodb
+    container_name: mongo
     ports:
       - 27017:27017 # make sure we don't have another mongo container running on same port
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=pass
     volumes:
-      - ./data/mongodb:/data/db/
+      - type: bind
+        source: ./data/mongo
+        target: /data/mongo/db
 
 networks:
   docker-db:
