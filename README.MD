@@ -27,35 +27,33 @@ This repository contains configuration files for running multiple database servi
 
 - **Image:** `postgres`
 - **Ports:** `5432:5432`
-- **Volumes:** `./pg-data:/var/lib/postgresql/data`
+- **Volumes:** `./postgresql:/var/lib/postgresql/data`
 - **Environment Variables:**
   - `POSTGRES_USER`: root
-  - `POSTGRES_PASSWORD`: q8X7JiGEakDfYScg
+  - `POSTGRES_PASSWORD`: pass
 
 ### Redis
 
 - **Image:** `redis:latest`
 - **Ports:** `6379:6379`
-- **Volumes:** `./redis-data:/data`
+- **Volumes:** `./redis:/data`
 
 ### MongoDB
 
 - **Image:** `mongo`
 - **Ports:** `27017:27017`
-- **Volumes:** `./mongo_data/:/data/db/`
+- **Volumes:** `./mongodb:/data/db/`
 <!-- - **Environment Variables:**
   - `MONGO_INITDB_ROOT_USERNAME`: root
-  - `MONGO_INITDB_ROOT_PASSWORD`: q8X7JiGEakDfYScg -->
+  - `MONGO_INITDB_ROOT_PASSWORD`: password -->
 
 ### MySQL
 
 - **Image:** `mysql`
 - **Ports:** `3306:3306`
-- **Volumes:** `./mysql_data:/var/lib/mysql`
+- **Volumes:** `./mysql:/var/lib/mysql`
 - **Environment Variables:**
-  - `MYSQL_ROOT_PASSWORD`: root
-  - `MYSQL_USER`: root
-  - `MYSQL_PASSWORD`: q8X7JiGEakDfYScg
+  - `MYSQL_PASSWORD`: pass
 
 ## Running a Specific Service
 
@@ -119,10 +117,10 @@ docker compose up -d postgres
 
 Each service has a designated volume for data persistence. These volumes are mounted from the host system to ensure that data is retained even if the container is restarted or removed.
 
-- PostgreSQL data is stored in `./data/pg-data`.
-- Redis data is stored in `./data/redis-data`.
-- MongoDB data is stored in `./data/mongo_data`.
-- MySQL data is stored in `./data/mysql_data`.
+- PostgreSQL data is stored in `./data/postgresql`.
+- Redis data is stored in `./data/redis`.
+- MongoDB data is stored in `./data/mongodb`.
+- MySQL data is stored in `./data/mysql`.
 
 ## Environment Variables
 

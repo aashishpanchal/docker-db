@@ -1,1 +1,10 @@
-data
+docker-compose.override.yml
+.env
+tidb/data
+tidb/logs
+tidb/config/*/
+.idea
+cockroach/cockroach1
+cockroach/data
+nebulagraph/data
+nebulagraph/logs

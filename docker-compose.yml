@@ -1,32 +1,26 @@
-version: '3.1'
+version: "3.1"
 services:
-  # Postgres Sql database
-  postgres:
-    image: postgres
+  postgresql:
+    image: postgres:latest
     restart: always
     container_name: postgres
     volumes:
-      - ./data/pg-data:/var/lib/postgresql/data
+      - ./data/postgresql:/var/lib/postgresql/data
     ports:
-      - 5432:5432 # make sure you don't have another container running on 5432
+      - 5432:5432
     environment:
       - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=q8X7JiGEakDfYScg
-  # Mysql database
+      - POSTGRES_PASSWORD=pass
   mysql:
-    image: mysql
+    image: mysql:latest
     restart: always
     container_name: mysql
     environment:
-      # - MYSQL_DATABASE=example_db
-      # - MYSQL_USER=test
-      # - MYSQL_PASSWORD=test@123
-      - MYSQL_ROOT_PASSWORD=q8X7JiGEakDfYScg
+      - MYSQL_ROOT_PASSWORD=pass
     ports:
       - 3306:3306 # make sure you don't have another container running on 3306
     volumes:
-      - ./data/mysql_data:/var/lib/mysql
-  # Redis database
+      - ./data/mysql:/var/lib/mysql
   redis:
     image: redis:latest
     container_name: redis
@@ -34,43 +28,12 @@ services:
     ports:
       - 6379:6379
     volumes:
-      - ./data/redis-data:/data
-  # Mongodb database
+      - ./data/redis:/data
   mongo:
-    image: mongo
+    image: mongo:latest
     restart: always
-    container_name: mongo
+    container_name: mongodb
     ports:
       - 27017:27017 # make sure we don't have another mongo container running on same port
-    # environment:
-    #   MONGO_INITDB_ROOT_USERNAME: joker
-    #   MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
-      - ./data/mongo_data/:/data/db/
-  # MariaDB database
-  mariadb:
-    image: mariadb
-    restart: always
-    container_name: mariadb
-    environment:
-      - MARIADB_ROOT_PASSWORD=q8X7JiGEakDfYScg
-      # - MARIADB_DATABASE=example_db # Optional: pre-create a database
-      # - MARIADB_USER=testuser # Optional: create a user
-      # - MARIADB_PASSWORD=testpassword # Optional: set the password for the user
-    ports:
-      - 3306:3306 # Expose MariaDB on port 3306
-    volumes:
-      - ./data/mariadb_data:/var/lib/mysql
-  # PhpMyAdmin service
-  phpmyadmin:
-    image: phpmyadmin
-    restart: always
-    container_name: phpmyadmin
-    ports:
-      - 8080:80 # Access phpMyAdmin via http://localhost:8080
-    environment:
-      - PMA_HOST=mariadb
-      - PMA_USER=root
-      - PMA_PASSWORD=q8X7JiGEakDfYScg
-    depends_on:
-      - mariadb
+      - ./data/mongodb:/data/db/
