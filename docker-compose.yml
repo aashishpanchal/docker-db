@@ -1,7 +1,7 @@
 version: "3.1"
 services:
   postgresql:
-    image: postgres:latest
+    image: postgres
     restart: always
     container_name: postgres
     volumes:
@@ -12,17 +12,20 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=pass
   mysql:
-    image: mysql:latest
+    image: mysql
     restart: always
     container_name: mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=pass
+      # - MYSQL_USER=joker
+      # - MYSQL_PASSWORD=joker_pass
+      # - MYSQL_DATABASE=test
+      - MYSQL_ROOT_PASSWORD=pass # if you login with root, username is 'root'
     ports:
       - 3306:3306 # make sure you don't have another container running on 3306
     volumes:
       - ./data/mysql:/var/lib/mysql
   redis:
-    image: redis:latest
+    image: redis
     container_name: redis
     restart: always
     ports:
@@ -30,10 +33,13 @@ services:
     volumes:
       - ./data/redis:/data
   mongo:
-    image: mongo:latest
+    image: mongo
     restart: always
     container_name: mongodb
     ports:
       - 27017:27017 # make sure we don't have another mongo container running on same port
     volumes:
       - ./data/mongodb:/data/db/
+
+networks:
+  docker-db:
