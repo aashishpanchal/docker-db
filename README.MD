@@ -1,127 +1,58 @@
-# Database Services Setup
+# Docker DB
 
-This repository contains configuration files for running multiple database services using Docker Compose. The services included are PostgreSQL, Redis, MongoDB, and MySQL. These services are intended to be used as shared databases for various projects, allowing for easy management and consistency.
+This repository provides ready-to-use Docker Compose files to set up and manage popular databases like Redis, MongoDB, MySQL, and PostgreSQL locally with ease.
 
-## Services Overview
+## Overview
 
-- [PostgreSQL](#postgresql)
-- [Redis](#redis)
-- [MongoDB](#mongodb)
-- [MySQL](#mysql)
+Each database configuration is optimized for quick setup and local development. By using Docker Compose, developers can:
 
-## Usage
+- Save time on manual installations.
+- Ensure consistent environment setups.
+- Persist data locally for testing and development purposes.
 
-- [Running a Specific Service](#running-a-specific-service)
-- [Running Multiple Services](#running-multiple-services)
-- [Stopping a Service](#stopping-a-service)
-- [Running in Detached Mode](#running-in-detached-mode)
+## Quick Start
 
-## Others
+1. **Clone the Repository**:
 
-- [Data Persistence](#data-persistence)
-- [Environment Variables](#environment-variables)
+   ```bash
+   git clone https://github.com/aashishpanchal/docker-db.git
+   cd docker-db
+   ```
 
----
+2. **Navigate to the desired database folder** (e.g., `redis`, `mongo`, `mysql`, or `postgres`).
 
-### PostgreSQL
+3. **Run Docker Compose**:
 
-- **Image:** `postgres`
-- **Ports:** `5432:5432`
-- **Volumes:** `./postgresql:/var/lib/postgresql/data`
-- **Environment Variables:**
-  - `POSTGRES_USER`: root
-  - `POSTGRES_PASSWORD`: pass
+   ```bash
+   docker-compose up -d
+   ```
 
-### Redis
+4. Follow the instructions in the respective database README file for connection details and configurations.
 
-- **Image:** `redis:latest`
-- **Ports:** `6379:6379`
-- **Volumes:** `./redis:/data`
+## Contributing
 
-### MongoDB
+We welcome contributions to improve or expand this repository. Here’s how you can contribute:
 
-- **Image:** `mongo`
-- **Ports:** `27017:27017`
-- **Volumes:** `./mongodb:/data/db/`
-<!-- - **Environment Variables:**
-  - `MONGO_INITDB_ROOT_USERNAME`: root
-  - `MONGO_INITDB_ROOT_PASSWORD`: password -->
+1. Fork the repository.
+2. Create a new branch:
+   ```bash
+   git checkout -b feature/new-feature
+   ```
+3. Commit your changes:
+   ```bash
+   git commit -m "Add new feature"
+   ```
+4. Push to your branch:
+   ```bash
+   git push origin feature/new-feature
+   ```
+5. Open a Pull Request and provide a detailed description of your changes.
 
-### MySQL
+## Author
 
-- **Image:** `mysql`
-- **Ports:** `3306:3306`
-- **Volumes:** `./mysql:/var/lib/mysql`
-- **Environment Variables:**
-  - `MYSQL_PASSWORD`: pass
+Created and maintained by **Aniket**.
 
-## Running a Specific Service
+Feel free to reach out with suggestions or questions:
 
-To start a specific service, use the following command:
-
-```bash
-docker compose up <service-name>
-```
-
-Replace `<service-name>` with the name of the service you want to start (e.g., `postgres`, `redis`, `mongo`, `mysql`).
-
-#### Example
-
-To run only the PostgreSQL service:
-
-```bash
-docker compose up postgres
-```
-
-## Running Multiple Services
-
-To run multiple services, list them separated by a space:
-
-```bash
-docker compose up postgres mongo
-```
-
-## Stopping a Service
-
-To stop a specific service, use the following command:
-
-```bash
-docker compose stop <service-name>
-```
-
-#### Example
-
-To stop the PostgreSQL service:
-
-```bash
-docker compose stop postgres
-```
-
-## Running in Detached Mode
-
-To start a service in detached mode (running in the background), use the `-d` flag:
-
-```bash
-docker compose up -d <service-name>
-```
-
-#### Example
-
-To start PostgreSQL in detached mode:
-
-```bash
-docker compose up -d postgres
-```
-
-## Data Persistence
-
-Each service has a designated volume for data persistence. These volumes are mounted from the host system to ensure that data is retained even if the container is restarted or removed.
-
-- PostgreSQL data is stored in `./data/postgresql`.
-- Redis data is stored in `./data/redis`.
-- MongoDB data is stored in `./data/mongodb`.
-- MySQL data is stored in `./data/mysql`.
-
-## Environment Variables
-
-For security purposes, sensitive information like passwords is managed through environment variables. You can modify these values in the `docker compose.yml` file as needed.
+- GitHub: [Aashish Panchal](https://github.com/aashishpanchal)
+- Email: [aipanchal51@example.com](mailto:aipanchal51@gmail.com)

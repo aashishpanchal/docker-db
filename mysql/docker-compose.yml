@@ -1,0 +1,18 @@
+version: "3.1"
+services:
+  mysql:
+    image: mysql
+    container_name: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=pass # if you login with root, username is 'root'
+    ports:
+      - 3306:3306 # make sure you don't have another container running on 3306
+    volumes:
+      - ./db_data:/var/lib/mysql
+    networks:
+      - mysql-db
+
+networks:
+  mysql-db:
+    driver: bridge
