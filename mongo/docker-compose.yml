@@ -1,6 +1,6 @@
 version: "3.1"
 services:
-  mongo:
+  mongodb:
     image: mongo
     container_name: mongo
     restart: always
@@ -10,7 +10,9 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=pass
     volumes:
-      - ./db_data:/data/db
+      - type: bind
+        source: ./db_data
+        target: /data/db
     networks:
       - mongo-db
 
