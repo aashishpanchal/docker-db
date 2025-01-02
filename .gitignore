@@ -1,4 +1,4 @@
 data
-db_data
+data
 docker-compose.override.yml
 .env

@@ -33,7 +33,7 @@ Easily set up MongoDB locally using Docker with this repository.
   mongodb://root:pass@localhost:27017
   ```
 
-- **Data Persistence**: Local directory `./db_data` is mapped to `/data/db` inside the container.
+- **Data Persistence**: Local directory `./data` is mapped to `/data/db` inside the container.
 - **Network**: Uses a Docker network `mongo-db` for isolation.
 
 ---
@@ -66,7 +66,7 @@ Stop the container with:
 docker-compose down
 ```
 
-Data remains in `./db_data`.
+Data remains in `./data`.
 
 ---
 

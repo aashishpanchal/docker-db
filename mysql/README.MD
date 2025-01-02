@@ -33,7 +33,7 @@ Easily set up MySQL locally using Docker with this repository.
   mysql://root:pass@localhost:3306
   ```
 
-- **Data Persistence**: Local directory `./db_data` is mapped to `/var/lib/mysql` inside the container.
+- **Data Persistence**: Local directory `./data` is mapped to `/var/lib/mysql` inside the container.
 - **Network**: Uses a Docker network `mysql-db` for isolation.
 
 ---
@@ -68,7 +68,7 @@ Stop the container with:
 docker-compose down
 ```
 
-Data remains in `./db_data`.
+Data remains in `./data`.
 
 ---
 

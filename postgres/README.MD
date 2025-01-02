@@ -33,7 +33,7 @@ Easily set up PostgreSQL locally using Docker with this repository.
   postgres://root:pass@localhost:5432
   ```
 
-- **Data Persistence**: Local directory `./db_data` is mapped to `/var/lib/postgresql/data` inside the container.
+- **Data Persistence**: Local directory `./data` is mapped to `/var/lib/postgresql/data` inside the container.
 - **Network**: Uses a Docker network `postgres-db` for isolation.
 
 ---
@@ -66,7 +66,7 @@ Stop the container with:
 docker-compose down
 ```
 
-Data remains in `./db_data`.
+Data remains in `./data`.
 
 ---
 
