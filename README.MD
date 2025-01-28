@@ -1,58 +1,165 @@
-# Docker DB
+# Database Services Setup
 
-This repository provides ready-to-use Docker Compose files to set up and manage popular databases like Redis, MongoDB, MySQL, and PostgreSQL locally with ease.
+This repository contains configuration files for running multiple database services using Docker Compose. The services included are PostgreSQL, Redis, MongoDB, MySQL, Adminer, PgAdmin, and RedisInsight. These services are intended to be used as shared databases for various projects, allowing for easy management and consistency.
 
-## Overview
+## Services Overview
 
-Each database configuration is optimized for quick setup and local development. By using Docker Compose, developers can:
+- [PostgreSQL](#postgresql)
+- [Redis](#redis)
+- [MongoDB](#mongodb)
+- [MySQL](#mysql)
+- [Adminer](#adminer)
+- [PgAdmin](#pgadmin)
+- [RedisInsight](#redisinsight)
 
-- Save time on manual installations.
-- Ensure consistent environment setups.
-- Persist data locally for testing and development purposes.
+## Usage
 
-## Quick Start
+- [Running a Specific Service](#running-a-specific-service)
+- [Running Multiple Services](#running-multiple-services)
+- [Stopping a Service](#stopping-a-service)
+- [Running in Detached Mode](#running-in-detached-mode)
 
-1. **Clone the Repository**:
+## Others
 
-   ```bash
-   git clone https://github.com/aashishpanchal/docker-db.git
-   cd docker-db
-   ```
+- [Data Persistence](#data-persistence)
+- [Environment Variables](#environment-variables)
 
-2. **Navigate to the desired database folder** (e.g., `redis`, `mongo`, `mysql`, or `postgres`).
+---
 
-3. **Run Docker Compose**:
+### PostgreSQL
 
-   ```bash
-   docker-compose up -d
-   ```
+- **Image:** `postgres`
+- **Ports:** `5432:5432`
+- **Volumes:** `./data/postgres:/var/lib/postgresql/data`
+- **Environment Variables:**
+  - `POSTGRES_USER`: root
+  - `POSTGRES_PASSWORD`: pass
 
-4. Follow the instructions in the respective database README file for connection details and configurations.
+### Redis
 
-## Contributing
+- **Image:** `redis`
+- **Ports:** `6379:6379`
+- **Volumes:** `./data/redis:/data`
 
-We welcome contributions to improve or expand this repository. Here’s how you can contribute:
+### MongoDB
 
-1. Fork the repository.
-2. Create a new branch:
-   ```bash
-   git checkout -b feature/new-feature
-   ```
-3. Commit your changes:
-   ```bash
-   git commit -m "Add new feature"
-   ```
-4. Push to your branch:
-   ```bash
-   git push origin feature/new-feature
-   ```
-5. Open a Pull Request and provide a detailed description of your changes.
+- **Image:** `mongo`
+- **Ports:** `27017:27017`
+- **Volumes:** `./data/mongo:/data/db`
+- **Environment Variables:**
+  - `MONGO_INITDB_ROOT_USERNAME`: root
+  - `MONGO_INITDB_ROOT_PASSWORD`: pass
 
-## Author
+### MySQL
 
-Created and maintained by **Aniket**.
+- **Image:** `mysql`
+- **Ports:** `3306:3306`
+- **Volumes:** `./data/mysql:/var/lib/mysql`
+- **Environment Variables:**
+  - `MYSQL_ROOT_PASSWORD`: pass
 
-Feel free to reach out with suggestions or questions:
+### Adminer
 
-- GitHub: [Aashish Panchal](https://github.com/aashishpanchal)
-- Email: [aipanchal51@example.com](mailto:aipanchal51@gmail.com)
+- **Image:** `adminer`
+- **Ports:** `8080:8080`
+- **Environment Variables:**
+  - `ADMINER_DEFAULT_SERVER`: mysql
+  - `ADMINER_DESIGN`: pma-dark
+  - `ADMINER_USER`: admin
+  - `ADMINER_PASSWORD`: root
+
+### PgAdmin
+
+- **Image:** `dpage/pgadmin4`
+- **Ports:** `5050:80`
+- **Environment Variables:**
+  - `PGADMIN_DEFAULT_EMAIL`: admin@example.com
+  - `PGADMIN_DEFAULT_PASSWORD`: admin
+- **Volumes:** `./data/pgadmin:/var/lib/pgadmin`
+
+### RedisInsight
+
+- **Image:** `redislabs/redisinsight`
+- **Ports:** `5540:5540`
+- **Environment Variables:**
+  - `REDISINSIGHT_ALLOW_DEFAULT_PASSWORD`: "yes"
+
+## Running a Specific Service
+
+To start a specific service, use the following command:
+
+```bash
+docker compose up <service-name>
+```
+
+Replace `<service-name>` with the name of the service you want to start (e.g., `postgres`, `redis`, `mongo`, `mysql`, `adminer`, `pgadmin`, `redis_insight`).
+
+#### Example
+
+To run only the PostgreSQL service:
+
+```bash
+docker compose up postgres
+```
+
+## Running Multiple Services
+
+To run multiple services, list them separated by a space:
+
+```bash
+docker compose up postgres mongo
+```
+
+## Stopping a Service
+
+To stop a specific service, use the following command:
+
+```bash
+docker compose stop <service-name>
+```
+
+#### Example
+
+To stop the PostgreSQL service:
+
+```bash
+docker compose stop postgres
+```
+
+## Running in Detached Mode
+
+To start a service in detached mode (running in the background), use the `-d` flag:
+
+```bash
+docker compose up -d <service-name>
+```
+
+#### Example
+
+To start PostgreSQL in detached mode:
+
+```bash
+docker compose up -d postgres
+```
+
+## Data Persistence
+
+Each service has a designated volume for data persistence. These volumes are mounted from the host system to ensure that data is retained even if the container is restarted or removed.
+
+- PostgreSQL data is stored in `./data/postgres`.
+- Redis data is stored in `./data/redis`.
+- MongoDB data is stored in `./data/mongo`.
+- MySQL data is stored in `./data/mysql`.
+- PgAdmin data is stored in `./data/pgadmin`.
+
+## Environment Variables
+
+For security purposes, sensitive information like passwords is managed through environment variables. You can modify these values in the `docker-compose.yml` file as needed.
+
+### Key Updates:
+
+- Added Adminer, PgAdmin, and RedisInsight sections.
+- Updated the data persistence paths to match your Docker Compose file.
+- Included environment variables for all services.
+
+Feel free to modify any part of the README further if needed!
