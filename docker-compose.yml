@@ -60,6 +60,8 @@ services:
       - ADMINER_PASSWORD=root
     networks:
       - docker-db
+    volumes:
+      - adminer_data:/var/www/html
 
 networks:
   docker-db:
@@ -69,3 +71,4 @@ volumes:
   mongo_data: # mongodb-store
   mysql_data: # mysql-store
   redis_data: # redis-store
+  adminer_data: # adminer-store
