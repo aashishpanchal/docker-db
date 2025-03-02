@@ -9,8 +9,6 @@ This repository contains configuration files for running multiple database servi
 - [MongoDB](#mongodb)
 - [MySQL](#mysql)
 - [Adminer](#adminer)
-- [PgAdmin](#pgadmin)
-- [RedisInsight](#redisinsight)
 
 ## Usage
 
@@ -68,22 +66,6 @@ This repository contains configuration files for running multiple database servi
   - `ADMINER_USER`: admin
   - `ADMINER_PASSWORD`: root
 
-### PgAdmin
-
-- **Image:** `dpage/pgadmin4`
-- **Ports:** `5050:80`
-- **Environment Variables:**
-  - `PGADMIN_DEFAULT_EMAIL`: admin@example.com
-  - `PGADMIN_DEFAULT_PASSWORD`: admin
-- **Volumes:** `./data/pgadmin:/var/lib/pgadmin`
-
-### RedisInsight
-
-- **Image:** `redislabs/redisinsight`
-- **Ports:** `5540:5540`
-- **Environment Variables:**
-  - `REDISINSIGHT_ALLOW_DEFAULT_PASSWORD`: "yes"
-
 ## Running a Specific Service
 
 To start a specific service, use the following command:
@@ -92,7 +74,7 @@ To start a specific service, use the following command:
 docker compose up <service-name>
 ```
 
-Replace `<service-name>` with the name of the service you want to start (e.g., `postgres`, `redis`, `mongo`, `mysql`, `adminer`, `pgadmin`, `redis_insight`).
+Replace `<service-name>` with the name of the service you want to start (e.g., `postgres`, `redis`, `mongo`, `mysql`, `adminer`).
 
 #### Example
 

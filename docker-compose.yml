@@ -60,29 +60,6 @@ services:
       - ADMINER_PASSWORD=root
     networks:
       - docker-db
-  pgadmin:
-    image: dpage/pgadmin4
-    restart: always
-    container_name: pgadmin
-    ports:
-      - 5050:5050 # make sure you don't have another container running on 5050
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    volumes:
-      - ./data/pgadmin:/var/lib/pgadmin
-    networks:
-      - docker-db
-  redis_insight:
-    image: redislabs/redisinsight
-    restart: always
-    container_name: redis_insight
-    ports:
-      - "5540:5540" # Expose RedisInsight on localhost:5540
-    environment:
-      REDISINSIGHT_ALLOW_DEFAULT_PASSWORD: "yes"
-    networks:
-      - docker-db
 
 networks:
   docker-db:
