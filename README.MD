@@ -9,8 +9,6 @@ This repository contains configuration files for running multiple database servi
 - [MongoDB](#mongodb)
 - [MySQL](#mysql)
 - [Adminer](#adminer)
-- [PgAdmin](#pgadmin)
-- [RedisInsight](#redisinsight)
 
 ## Usage
 
@@ -30,7 +28,7 @@ This repository contains configuration files for running multiple database servi
 
 - **Image:** `postgres`
 - **Ports:** `5432:5432`
-- **Volumes:** `./data/postgres:/var/lib/postgresql/data`
+- **Volumes:** `pg_data:/var/lib/postgresql/data`
 - **Environment Variables:**
   - `POSTGRES_USER`: root
   - `POSTGRES_PASSWORD`: pass
@@ -39,13 +37,13 @@ This repository contains configuration files for running multiple database servi
 
 - **Image:** `redis`
 - **Ports:** `6379:6379`
-- **Volumes:** `./data/redis:/data`
+- **Volumes:** `redis_data/redis:/data`
 
 ### MongoDB
 
 - **Image:** `mongo`
 - **Ports:** `27017:27017`
-- **Volumes:** `./data/mongo:/data/db`
+- **Volumes:** `mongo_data:/data/db`
 - **Environment Variables:**
   - `MONGO_INITDB_ROOT_USERNAME`: root
   - `MONGO_INITDB_ROOT_PASSWORD`: pass
@@ -54,7 +52,7 @@ This repository contains configuration files for running multiple database servi
 
 - **Image:** `mysql`
 - **Ports:** `3306:3306`
-- **Volumes:** `./data/mysql:/var/lib/mysql`
+- **Volumes:** `mysql_data:/var/lib/mysql`
 - **Environment Variables:**
   - `MYSQL_ROOT_PASSWORD`: pass
 
@@ -68,22 +66,6 @@ This repository contains configuration files for running multiple database servi
   - `ADMINER_USER`: admin
   - `ADMINER_PASSWORD`: root
 
-### PgAdmin
-
-- **Image:** `dpage/pgadmin4`
-- **Ports:** `5050:80`
-- **Environment Variables:**
-  - `PGADMIN_DEFAULT_EMAIL`: admin@example.com
-  - `PGADMIN_DEFAULT_PASSWORD`: admin
-- **Volumes:** `./data/pgadmin:/var/lib/pgadmin`
-
-### RedisInsight
-
-- **Image:** `redislabs/redisinsight`
-- **Ports:** `5540:5540`
-- **Environment Variables:**
-  - `REDISINSIGHT_ALLOW_DEFAULT_PASSWORD`: "yes"
-
 ## Running a Specific Service
 
 To start a specific service, use the following command:
@@ -92,7 +74,7 @@ To start a specific service, use the following command:
 docker compose up <service-name>
 ```
 
-Replace `<service-name>` with the name of the service you want to start (e.g., `postgres`, `redis`, `mongo`, `mysql`, `adminer`, `pgadmin`, `redis_insight`).
+Replace `<service-name>` with the name of the service you want to start (e.g., `postgres`, `redis`, `mongo`, `mysql`, `adminer`).
 
 #### Example
 
@@ -146,11 +128,10 @@ docker compose up -d postgres
 
 Each service has a designated volume for data persistence. These volumes are mounted from the host system to ensure that data is retained even if the container is restarted or removed.
 
-- PostgreSQL data is stored in `./data/postgres`.
-- Redis data is stored in `./data/redis`.
-- MongoDB data is stored in `./data/mongo`.
-- MySQL data is stored in `./data/mysql`.
-- PgAdmin data is stored in `./data/pgadmin`.
+- PostgreSQL data is stored in `pg_data`.
+- Redis data is stored in `redis_data`.
+- MongoDB data is stored in `mongo_data`.
+- MySQL data is stored in `mysql_data`.
 
 ## Environment Variables
 
@@ -158,7 +139,7 @@ For security purposes, sensitive information like passwords is managed through e
 
 ### Key Updates:
 
-- Added Adminer, PgAdmin, and RedisInsight sections.
+- Added Adminer, and RedisInsight sections.
 - Updated the data persistence paths to match your Docker Compose file.
 - Included environment variables for all services.
 

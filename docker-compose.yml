@@ -9,7 +9,7 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=pass
     volumes:
-      - ./data/postgres:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
     networks:
       - docker-db
   mysql:
@@ -21,7 +21,7 @@ services:
     ports:
       - 3306:3306 # make sure you don't have another container running on 3306
     volumes:
-      - ./data/mysql:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
     networks:
       - docker-db
   redis:
@@ -31,7 +31,7 @@ services:
     ports:
       - 6379:6379
     volumes:
-      - ./data/redis:/data
+      - redis_data:/data
     networks:
       - docker-db
   mongo:
@@ -44,7 +44,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=pass
     volumes:
-      - ./data/mongo:/data/db
+      - mongo_data:/data/db
     networks:
       - docker-db
   adminer:
@@ -60,29 +60,12 @@ services:
       - ADMINER_PASSWORD=root
     networks:
       - docker-db
-  pgadmin:
-    image: dpage/pgadmin4
-    restart: always
-    container_name: pgadmin
-    ports:
-      - 5050:5050 # make sure you don't have another container running on 5050
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    volumes:
-      - ./data/pgadmin:/var/lib/pgadmin
-    networks:
-      - docker-db
-  redis_insight:
-    image: redislabs/redisinsight
-    restart: always
-    container_name: redis_insight
-    ports:
-      - "5540:5540" # Expose RedisInsight on localhost:5540
-    environment:
-      REDISINSIGHT_ALLOW_DEFAULT_PASSWORD: "yes"
-    networks:
-      - docker-db
 
 networks:
   docker-db:
+
+volumes:
+  pg_data: # postgresql-store
+  mongo_data: # mongodb-store
+  mysql_data: # mysql-store
+  redis_data: # redis-store
