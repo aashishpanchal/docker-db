@@ -31,7 +31,7 @@ This repository contains configuration files for running multiple database servi
 - **Volumes:** `./data/postgres:/var/lib/postgresql/data`
 - **Environment Variables:**
   - `POSTGRES_USER`: root
-  - `POSTGRES_PASSWORD`: pass
+  - `POSTGRES_PASSWORD`: postgres
 
 ### Redis
 
