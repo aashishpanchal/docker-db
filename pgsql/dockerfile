@@ -1,0 +1,35 @@
+# Stage 1: Build the pgx_ulid extension
+FROM rust:slim-bookworm AS builder
+
+# Install dependencies and PostgreSQL 17 headers
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl ca-certificates gnupg lsb-release build-essential clang lld llvm \
+    libpq-dev git pkg-config \
+ && curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgres.gpg \
+ && echo "deb [signed-by=/usr/share/keyrings/postgres.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+ && apt-get update && apt-get install -y --no-install-recommends postgresql-server-dev-17 \
+ && rm -rf /var/lib/apt/lists/*
+
+# Install specific pgrx version
+RUN cargo install cargo-pgrx --version 0.12.7 --locked
+
+# Initialize pgrx for PG17
+RUN cargo pgrx init --pg17=/usr/lib/postgresql/17/bin/pg_config
+
+# Clone only latest commit of pgx_ulid
+WORKDIR /app
+RUN git clone --depth 1 https://github.com/pksunkara/pgx_ulid.git .
+
+# Build pgx_ulid extension for PG17
+RUN cargo pgrx install -r
+
+# Strip debug symbols (now correct path)
+RUN strip /usr/lib/postgresql/17/lib/pgx_ulid.so
+
+# Stage 2: Create minimal PostgreSQL 17 runtime image
+FROM postgres:17-bookworm
+
+# Copy artifacts from where cargo pgrx install placed them
+COPY --from=builder /usr/share/postgresql/17/extension/pgx_ulid.control /usr/share/postgresql/17/extension/
+COPY --from=builder /usr/share/postgresql/17/extension/pgx_ulid--*.sql /usr/share/postgresql/17/extension/
+COPY --from=builder /usr/lib/postgresql/17/lib/pgx_ulid.so /usr/lib/postgresql/17/lib/
