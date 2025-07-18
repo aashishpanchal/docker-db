@@ -168,12 +168,16 @@ stats: ## - Live resource monitoring (Ctrl+C to exit)
 	@echo "$(YELLOW)Container Stats:$(NC)"
 	@docker stats $(PROJECT_NAME)-postgres-1 $(PROJECT_NAME)-valkey-1 $(PROJECT_NAME)-rabbitmq-1
 
-disk-usage: ## - Show disk usage
+disk-usage: ## - Show disk usage and manage build cache
 	@echo "$(GREEN)[INFO]$(NC) Docker disk usage:"
 	@docker system df
 	@echo ""
 	@echo "$(GREEN)[INFO]$(NC) Data directory usage:"
 	@du -sh $(DATA_DIR)/* 2>/dev/null || echo "No data directories found"
+	@echo ""
+	@echo "$(YELLOW)=== Build Cache Details ===$(NC)"
+	@docker builder prune -f --filter until=24h --keep-storage=3GB
+	@echo "$(GREEN)[INFO]$(NC) Build Cache: Auto-cleaned (keeping 3GB max)"
 
 docker-size: ## - Show Docker total space usage
 	@echo "$(GREEN)[INFO]$(NC) Docker Total Space Usage:"
