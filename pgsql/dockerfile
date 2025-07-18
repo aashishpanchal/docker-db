@@ -1,35 +1,42 @@
-# Stage 1: Build the pgx_ulid extension
-FROM rust:slim-bookworm AS builder
+# -----------------------------
+# Stage 1: Build / Fetch Artifacts
+# -----------------------------
+FROM debian:bookworm-slim AS builder
 
-# Install dependencies and PostgreSQL 17 headers
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl ca-certificates gnupg lsb-release build-essential clang lld llvm \
-    libpq-dev git pkg-config \
- && curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgres.gpg \
- && echo "deb [signed-by=/usr/share/keyrings/postgres.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
- && apt-get update && apt-get install -y --no-install-recommends postgresql-server-dev-17 \
- && rm -rf /var/lib/apt/lists/*
+ARG ARCH=amd64
+ARG PG_VERSION=17
+ARG ULID_VERSION=0.2.0
 
-# Install specific pgrx version
-RUN cargo install cargo-pgrx --version 0.12.7 --locked
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        curl \
+        ca-certificates \
+        gnupg \
+        libpq5 && \
+    curl -L -o /tmp/pgx_ulid.deb \
+      https://github.com/pksunkara/pgx_ulid/releases/download/v${ULID_VERSION}/pgx_ulid-v${ULID_VERSION}-pg${PG_VERSION}-${ARCH}-linux-gnu.deb && \
+    apt-get install -y --no-install-recommends /tmp/pgx_ulid.deb && \
+    rm /tmp/pgx_ulid.deb && \
+    apt-get purge -y curl && \
+    rm -rf /var/lib/apt/lists/*
 
-# Initialize pgrx for PG17
-RUN cargo pgrx init --pg17=/usr/lib/postgresql/17/bin/pg_config
-
-# Clone only latest commit of pgx_ulid
-WORKDIR /app
-RUN git clone --depth 1 https://github.com/pksunkara/pgx_ulid.git .
-
-# Build pgx_ulid extension for PG17
-RUN cargo pgrx install -r
-
-# Strip debug symbols (now correct path)
-RUN strip /usr/lib/postgresql/17/lib/pgx_ulid.so
-
-# Stage 2: Create minimal PostgreSQL 17 runtime image
+# -----------------------------
+# Stage 2: Final Postgres Image
+# -----------------------------
 FROM postgres:17-bookworm
 
-# Copy artifacts from where cargo pgrx install placed them
-COPY --from=builder /usr/share/postgresql/17/extension/pgx_ulid.control /usr/share/postgresql/17/extension/
-COPY --from=builder /usr/share/postgresql/17/extension/pgx_ulid--*.sql /usr/share/postgresql/17/extension/
-COPY --from=builder /usr/lib/postgresql/17/lib/pgx_ulid.so /usr/lib/postgresql/17/lib/
+ARG PG_VERSION=17
+ARG ULID_VERSION=0.2.0
+
+# Copy only required files from builder stage
+COPY --from=builder /var/lib/postgresql/extension/ulid.control \
+    /usr/share/postgresql/${PG_VERSION}/extension/pgx_ulid.control
+
+COPY --from=builder /var/lib/postgresql/extension/ulid--${ULID_VERSION}.sql \
+    /usr/share/postgresql/${PG_VERSION}/extension/pgx_ulid--${ULID_VERSION}.sql
+
+COPY --from=builder /usr/lib/postgresql/lib/pgx_ulid.so \
+    /usr/lib/postgresql/${PG_VERSION}/lib/
+
+# Set the shared_preload_libraries parameter
+RUN echo "shared_preload_libraries = 'pgx_ulid'" >> /usr/share/postgresql/postgresql.conf.sample

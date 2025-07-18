@@ -3,6 +3,7 @@
 services:
   # Postgres SQL
   postgres:
+    platform: linux/amd64
     build:
       context: ./pgsql
       dockerfile: dockerfile
