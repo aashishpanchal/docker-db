@@ -1,4 +1,3 @@
-# Docker-compose
 # Deploy config according to 8GB Ram/2 Core CPU
 services:
   # Postgres SQL
@@ -17,18 +16,15 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       # Link default sql
-      - ./pgsql/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+      - ./pgsql:/docker-entrypoint-initdb.d:ro
       # Link default conf
       - ./conf/postgresql.conf:/etc/postgresql/postgresql.conf:ro
     command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
     deploy:
       resources:
         limits:
-          cpus: "0.5"
+          cpus: "1"
           memory: 4G
-        reservations:
-          cpus: "0.25"
-          memory: 512M
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
@@ -48,7 +44,7 @@ services:
 
   # Valkey (Redis replacement)
   valkey:
-    image: valkey/valkey:8-bookworm
+    image: valkey/valkey:8-alpine
     command: >
       valkey-server /usr/local/etc/valkey/valkey.conf
       --requirepass ${VALKEY_PASSWORD}
@@ -63,10 +59,7 @@ services:
       resources:
         limits:
           cpus: "0.5"
-          memory: 1G
-        reservations:
-          cpus: "0.25"
-          memory: 128M
+          memory: 2G
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "valkey-cli", "--raw", "incr", "ping"]
@@ -100,10 +93,7 @@ services:
       resources:
         limits:
           cpus: "0.5"
-          memory: 1G
-        reservations:
-          cpus: "0.25"
-          memory: 256M
+          memory: 2G
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "ping"]

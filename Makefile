@@ -43,7 +43,7 @@ create-dirs: ## - Create necessary directories
 	@mkdir -p $(DATA_DIR)/valkey
 	@mkdir -p $(DATA_DIR)/rabbitmq
 	@echo "$(GREEN)[INFO]$(NC) Running setup.sh script..."
-	@bash ./setup.sh
+	@bash ./bin/setup.sh
 	@echo "$(GREEN)[INFO]$(NC) setup.sh completed successfully!"
 	@echo "$(GREEN)[INFO]$(NC) Directories created successfully!"
 
@@ -61,7 +61,7 @@ setup: create-dirs ## - Initial setup - create directories and copy env file
 ##@ Docker Services
 start: check-env create-dirs ## - Start PostgreSQL, Valkey, and RabbitMQ services
 	@echo "$(GREEN)[INFO]$(NC) Starting PostgreSQL, Valkey, and RabbitMQ services..."
-	@docker-compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) --env-file $(ENV_FILE) up -d
+	@docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) --env-file $(ENV_FILE) up -d
 	@echo "$(GREEN)[INFO]$(NC) Services started successfully!"
 	@echo "$(GREEN)[INFO]$(NC) PostgreSQL: localhost:5432"
 	@echo "$(GREEN)[INFO]$(NC) Valkey: localhost:6379"
@@ -71,7 +71,7 @@ start: check-env create-dirs ## - Start PostgreSQL, Valkey, and RabbitMQ service
 
 stop: ## - Stop all services
 	@echo "$(GREEN)[INFO]$(NC) Stopping services..."
-	@docker-compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) down
+	@docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) down
 	@echo "$(GREEN)[INFO]$(NC) Services stopped successfully!"
 
 restart: stop start ## - Restart all services
@@ -79,11 +79,11 @@ restart: stop start ## - Restart all services
 
 logs: ## - Show service logs (press Ctrl+C to exit)
 	@echo "$(GREEN)[INFO]$(NC) Showing service logs (press Ctrl+C to exit)..."
-	@docker-compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) logs -f
+	@docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) logs -f
 
 status: ## - Show service status
 	@echo "$(GREEN)[INFO]$(NC) Service Status:"
-	@docker-compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) ps
+	@docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) ps
 
 ps: ## - Show running containers
 	@echo "$(GREEN)[INFO]$(NC) Running containers:"
@@ -94,7 +94,7 @@ clean: ## - Stop services and remove volumes (⚠️ destroys data)
 	@echo "$(RED)[WARNING]$(NC) Press Ctrl+C to cancel, or Enter to continue..."
 	@read dummy
 	@echo "$(GREEN)[INFO]$(NC) Stopping services and removing volumes..."
-	@docker-compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) down -v
+	@docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) down -v
 	@sudo rm -rf $(DATA_DIR)/*
 	@echo "$(GREEN)[INFO]$(NC) Cleanup completed!"
 
@@ -174,10 +174,6 @@ disk-usage: ## - Show disk usage and manage build cache
 	@echo ""
 	@echo "$(GREEN)[INFO]$(NC) Data directory usage:"
 	@du -sh $(DATA_DIR)/* 2>/dev/null || echo "No data directories found"
-	@echo ""
-	@echo "$(YELLOW)=== Build Cache Details ===$(NC)"
-	@docker builder prune -f --filter until=24h --keep-storage=3GB
-	@echo "$(GREEN)[INFO]$(NC) Build Cache: Auto-cleaned (keeping 3GB max)"
 
 docker-size: ## - Show Docker total space usage
 	@echo "$(GREEN)[INFO]$(NC) Docker Total Space Usage:"

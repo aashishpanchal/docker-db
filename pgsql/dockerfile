@@ -18,6 +18,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends /tmp/pgx_ulid.deb && \
     rm /tmp/pgx_ulid.deb && \
     apt-get purge -y curl && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # -----------------------------
