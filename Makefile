@@ -113,7 +113,7 @@ db-tables: check-env ## - List tables in database
 
 shell-valkey: check-env ## - Connect to Valkey shell
 	@echo "$(GREEN)[INFO]$(NC) Connecting to Valkey shell..."
-	@docker exec -it -e VALKEY_PASSWORD=$(VALKEY_PASSWORD) $(PROJECT_NAME)-valkey-1 valkey-cli -a $(VALKEY_PASSWORD)
+	@docker exec -it -e REDISCLI_AUTH=$(VALKEY_PASSWORD) $(PROJECT_NAME)-valkey-1 valkey-cli
 
 shell-rabbitmq: check-env ## - Connect to RabbitMQ management CLI
 	@echo "$(GREEN)[INFO]$(NC) Connecting to RabbitMQ management CLI..."
