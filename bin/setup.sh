@@ -29,5 +29,3 @@ SET timezone = 'Asia/Kolkata';
 \\c ${DB_NAME}
 CREATE EXTENSION IF NOT EXISTS pgx_ulid;
 EOF
-
-echo "✅ Generated pgsql/init-db.sql with pgx_ulid for database: ${DB_NAME}"
