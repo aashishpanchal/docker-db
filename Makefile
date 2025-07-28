@@ -48,7 +48,7 @@ create-dirs: ## - Create necessary directories
 	@echo "$(GREEN)[INFO]$(NC) Directories created successfully!"
 
 setup: create-dirs ## - Initial setup - create directories and copy env file
-	@echo "$(GREEN)[INFO]$(NC) Setting up Zinix database environment..."
+	@echo "$(GREEN)[INFO]$(NC) Setting up ${PROJECT_NAME} database environment..."
 	@if [ ! -f "$(ENV_FILE)" ]; then \
 		cp .env.example $(ENV_FILE); \
 		echo "$(YELLOW)[WARN]$(NC) Environment file created from template"; \
