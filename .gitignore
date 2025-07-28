@@ -30,5 +30,3 @@ Temporary Items
 
 # Database
 /data/
-
-/pgsql/init-db.sql
