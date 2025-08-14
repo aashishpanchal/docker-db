@@ -25,9 +25,9 @@ endif
 ##@ Help
 help: ## - Show help message
 	@echo "$(CYAN)Docker Management - Available Commands$(NC)"
-	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make $(YELLOW)<target>$(NC)\n"} \
-	/^[a-zA-Z_-]+:.*##/ { printf "  $(YELLOW)%-14s$(NC) %s\n", $$1, $$2 } \
-	/^##@/ { printf "\n$(BLUE)%s$(NC)\n", substr($$0, 5) }' $(MAKEFILE_LIST)
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make $(CYAN)<target>$(NC)\n"} \
+	/^[a-zA-Z_-]+:.*##/ { printf "  $(CYAN)%-14s$(NC) %s\n", $$1, $$2 } \
+	/^##@/ { printf "\n$(GREEN)%s$(NC)\n", substr($$0, 5) }' $(MAKEFILE_LIST)
 
 ##@ Setup
 check-env: ## - Check if environment file exists
