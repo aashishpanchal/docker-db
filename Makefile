@@ -197,15 +197,22 @@ security: ## - Run comprehensive security audit
 	@chmod 600 .env
 	@echo "$(GREEN)✓$(NC) .env file permissions set to 600"
 	@./bin/checker.sh
-gen-pass: ## - Generate strong passwords for services
-	@echo "$(GREEN)[INFO]$(NC) Generating strong passwords..."
-	@echo "Copy these to your .env file:"
-	@echo ""
-	@echo "$(GREEN)REDIS_PASS$(NC): $(CYAN)$$(openssl rand -base64 32 | tr -d '=+/' | head -c 32)$(NC)"
-	@echo "$(GREEN)POSTGRES_PASS$(NC): $(CYAN)$$(openssl rand -base64 32 | tr -d '=+/' | head -c 32)$(NC)"
-	@echo "$(GREEN)RABBITMQ_PASS$(NC): $(CYAN)$$(openssl rand -base64 32 | tr -d '=+/' | head -c 32)$(NC)"
-	@echo ""
-	@echo "$(YELLOW)Note: Save these passwords securely!$(NC)"
+
+gen-pass: check-env ## - Generate and auto-replace passwords in .env file
+	@echo "$(GREEN)[INFO]$(NC) Generating strong passwords and updating .env file..."
+	@REDIS_NEW=$$(openssl rand -base64 32 | tr -d '=+/' | head -c 32); \
+	POSTGRES_NEW=$$(openssl rand -base64 32 | tr -d '=+/' | head -c 32); \
+	RABBITMQ_NEW=$$(openssl rand -base64 32 | tr -d '=+/' | head -c 32); \
+	cp $(ENV_FILE) $(ENV_FILE).backup; \
+	sed -i.tmp "s/^REDIS_PASS=.*/REDIS_PASS=$$REDIS_NEW/" $(ENV_FILE); \
+	sed -i.tmp "s/^POSTGRES_PASS=.*/POSTGRES_PASS=$$POSTGRES_NEW/" $(ENV_FILE); \
+	sed -i.tmp "s/^RABBITMQ_PASS=.*/RABBITMQ_PASS=$$RABBITMQ_NEW/" $(ENV_FILE); \
+	rm -f $(ENV_FILE).tmp; \
+	echo "$(GREEN)✓$(NC) Passwords updated in $(ENV_FILE)"; \
+	echo "$(YELLOW)[INFO]$(NC) Backup saved as $(ENV_FILE).backup"; \
+	echo "$(GREEN)REDIS_PASS$(NC): $(CYAN)$$REDIS_NEW$(NC)"; \
+	echo "$(GREEN)POSTGRES_PASS$(NC): $(CYAN)$$POSTGRES_NEW$(NC)"; \
+	echo "$(GREEN)RABBITMQ_PASS$(NC): $(CYAN)$$RABBITMQ_NEW$(NC)"
 
 audit-logs: ## - Show recent security-relevant log entries
 	@echo "$(GREEN)[INFO]$(NC) Showing recent security logs..."
