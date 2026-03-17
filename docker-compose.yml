@@ -1,91 +1,237 @@
 services:
-  # PostgreSQL - Relational Database
+  # Postgres
   postgres:
-    image: postgres
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASS}
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 4G
     restart: unless-stopped
-    container_name: postgres_db
-    environment:
-      POSTGRES_DB: postgres_db
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./data/postgres:/var/lib/postgresql/data
-    deploy:
-      resources:
-        limits:
-          cpus: "0.5"
-          memory: 512M
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     networks:
-      - docker-db
-  # MySQL - Relational Database
+      - db_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    security_opt:
+      - no-new-privileges:true
+
+  # MySQL
   mysql:
-    image: mysql
-    restart: always
-    container_name: mysql
+    image: mysql:9-oracle
     environment:
-      - MYSQL_ROOT_PASSWORD=pass
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASS}
+      MYSQL_DATABASE: ${MYSQL_DB}
     ports:
-      - "3306:3306"
+      - "${MYSQL_PORT:-3306}:3306"
     volumes:
-      - ./data/mysql:/var/lib/mysql
-    networks:
-      - docker-db
+      - mysql_data:/var/lib/mysql
     deploy:
       resources:
         limits:
-          cpus: "0.5"
-          memory: 512M
-  # Redis Commander - Redis GUI
+          cpus: "1.0"
+          memory: 4G
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-p${MYSQL_PASS}",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - db_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    security_opt:
+      - no-new-privileges:true
+
+  # Redis
   redis:
-    image: redis
-    container_name: redis
-    restart: always
+    image: redis:8-alpine
+    command: >
+      redis-server /usr/local/etc/redis/redis.conf
+      --requirepass ${REDIS_PASS}
+      --appendonly yes
+      --appendfsync everysec
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT:-6379}:6379"
     volumes:
-      - ./data/redis:/data
-    deploy:
-      resources:
-        limits:
-          cpus: "0.3"
-          memory: 256M
-    networks:
-      - docker-db
-  # MongoDB - Document Database
-  mongo:
-    image: mongo
-    restart: always
-    container_name: mongo
-    ports:
-      - "27017:27017" # make sure we don't have another mongo container running on same port
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=pass
-    volumes:
-      - ./data/mongo:/data/db
+      - redis_data:/data
     deploy:
       resources:
         limits:
           cpus: "0.5"
-          memory: 512M
+          memory: 2G
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     networks:
-      - docker-db
-  # Adminer - Manage database
+      - db_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    security_opt:
+      - no-new-privileges:true
+
+  # MongoDB
+  mongo:
+    image: mongo:8
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+      MONGO_INITDB_DATABASE: ${MONGO_DB}
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    volumes:
+      - mongo_data:/data/db
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 4G
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - db_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    security_opt:
+      - no-new-privileges:true
+
+  # RabbitMQ
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_VHOST:-/}
+    ports:
+      - "${RABBITMQ_PORT:-5672}:5672"
+      - "${RABBITMQ_MANAGEMENT_PORT:-15672}:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 2G
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - db_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    security_opt:
+      - no-new-privileges:true
+
+  # Adminer
   adminer:
     image: adminer
-    restart: always
-    container_name: adminer
+    restart: unless-stopped
     ports:
-      - "8080:8080" # make sure you don't have another container running on 8080
+      - "${ADMINER_PORT:-8080}:8080"
     environment:
-      - ADMINER_DEFAULT_SERVER=mysql # Change to mysql to connect to MySQL
-      - ADMINER_DESIGN=pma-dark
-      - ADMINER_USER=admin
-      - ADMINER_PASSWORD=root
+      ADMINER_DEFAULT_SERVER: mysql
+      ADMINER_DESIGN: pma-dark
     networks:
-      - docker-db
+      - db_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    security_opt:
+      - no-new-privileges:true
 
+# All service volumes
+volumes:
+  redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/redis
+  postgres_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/postgres
+  rabbitmq_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/rabbitmq
+  mysql_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/mysql
+  mongo_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/mongo
+
+# common network
 networks:
-  docker-db:
+  db_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
